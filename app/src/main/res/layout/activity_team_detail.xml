@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_24">
+
+    <!-- Botón de regreso -->
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/spacing_8"
+        android:src="@android:drawable/ic_menu_revert" />
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/ivDetailLogo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="@color/border"
+        android:contentDescription="@string/content_desc_logo" />
+
+    <!-- Nombre del equipo -->
+    <TextView
+        android:id="@+id/tvDetailName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_28"
+        android:textStyle="bold"
+        tools:text="@string/placeholder_team_name" />
+
+    <!-- País -->
+    <TextView
+        android:id="@+id/tvDetailCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_16"
+        tools:text="@string/placeholder_country" />
+
+    <!-- Estadio y Ciudad -->
+    <TextView
+        android:id="@+id/tvDetailStadium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_16"
+        tools:text="@string/placeholder_stadium" />
+
+    <!-- Favorito -->
+    <ImageButton
+        android:id="@+id/btnFavorite"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="@dimen/spacing_32"
+        android:backgroundTint="@color/primary"
+        android:contentDescription="@string/content_desc_favorite"
+        android:src="@android:drawable/btn_star" />
+</LinearLayout>

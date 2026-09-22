@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Footlytics</string>
+
+    <!-- Splash -->
+    <string name="splash_subtitle">Explora competiciones y equipos</string>
+
+    <!-- Home & Search -->
+    <string name="search_hint">Buscar equipo...</string>
+
+    <!-- Empty States -->
+    <string name="empty_favorites_title">Aún no tienes favoritos</string>
+    <string name="empty_favorites_desc">Busca equipos y guárdalos para verlos aquí.</string>
+    <string name="action_explore_teams">Explorar equipos</string>
+
+    <!-- Navegación -->
+    <string name="menu_explore">Explorar</string>
+    <string name="menu_favorites">Favoritos</string>
+
+    <!-- Tools / Placeholders visuales -->
+    <string name="placeholder_team_name">Nombre Equipo</string>
+    <string name="placeholder_country">País</string>
+    <string name="placeholder_team">Equipo</string>
+    <string name="placeholder_stadium">Estadio, Ciudad</string>
+
+    <!-- Accesibilidad -->
+    <string name="content_desc_logo">Logo del equipo</string>
+    <string name="content_desc_favorite">Marcar como favorito</string>
+</resources>

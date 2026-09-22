@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/spacing_16"
+    android:paddingVertical="@dimen/spacing_12">
+
+    <TextView
+        android:id="@+id/tvPosition"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_16"
+        android:textStyle="bold"
+        tools:text="1" />
+
+    <ImageView
+        android:id="@+id/ivStandingLogo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/spacing_12"
+        android:background="@color/background"
+        android:contentDescription="@string/content_desc_logo" />
+
+    <TextView
+        android:id="@+id/tvStandingTeam"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_16"
+        tools:text="@string/placeholder_team" />
+
+    <TextView
+        android:id="@+id/tvPlayed"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_14"
+        tools:text="7" />
+
+    <TextView
+        android:id="@+id/tvPoints"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/text_16"
+        android:textStyle="bold"
+        tools:text="21" />
+
+</LinearLayout>
