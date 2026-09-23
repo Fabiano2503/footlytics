@@ -1,155 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+    android:background="#F6F7F9">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Main Scrollable Content -->
+    <ScrollView
+        android:id="@+id/layoutContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.Material3.ActionBar">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/surface"
-            app:navigationIcon="?attr/homeAsUpIndicator"
-            app:title="" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- Main Content -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/layoutContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_24">
-
-                <!-- Team Logo -->
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ivDetailLogo"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="@dimen/spacing_16"
-                    android:contentDescription="@string/content_desc_logo"
-                    android:scaleType="fitCenter"
-                    tools:src="@drawable/ic_logo_footlytics" />
-
-                <!-- Team Name -->
-                <TextView
-                    android:id="@+id/tvDetailName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_16"
-                    android:gravity="center"
-                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    tools:text="@string/placeholder_team_name" />
-
-                <!-- Country -->
-                <TextView
-                    android:id="@+id/tvDetailCountry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_8"
-                    android:gravity="center"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    android:textColor="@color/text_secondary"
-                    tools:text="@string/placeholder_country" />
-
-                <!-- Stadium Name -->
-                <TextView
-                    android:id="@+id/tvDetailStadium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_24"
-                    android:gravity="center"
-                    android:textAppearance="?attr/textAppearanceBodyLarge"
-                    android:textColor="@color/text_primary"
-                    tools:text="@string/placeholder_stadium" />
-
-                <!-- Stadium City -->
-                <TextView
-                    android:id="@+id/tvDetailStadiumCity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_4"
-                    android:gravity="center"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="@color/text_secondary"
-                    tools:text="Madrid" />
-
-                <!-- Favorite Button -->
-                <ImageButton
-                    android:id="@+id/btnFavorite"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="@dimen/spacing_32"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/content_desc_favorite"
-                    android:src="@android:drawable/btn_star_big_off" />
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <!-- Loading View -->
-        <ProgressBar
-            android:id="@+id/pbLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="gone" />
-
-        <!-- Error Layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_24">
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/text_secondary"
-                android:visibility="gone"
-                tools:text="@string/error_team_detail_failed"
-                tools:visibility="visible" />
+            <!-- Toolbar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRetry"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/ivBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/content_desc_back"
+                    android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_title"
+                    android:textColor="#17202A"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivFavorite"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/content_desc_favorite"
+                    android:src="@drawable/ic_star_outline"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Team Profile (Margin top 64dp, gravity center) -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:text="@string/btn_retry"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:layout_marginTop="64dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/ivTeamLogoContainer"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#E4E7EC"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:id="@+id/ivTeamLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/content_desc_logo"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"
+                        tools:src="@drawable/ic_logo_footlytics" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tvTeamName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:textColor="#17202A"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="Real Madrid" />
+
+                <TextView
+                    android:id="@+id/tvTeamDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="#667085"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    tools:text="\uD83C\uDDEA\uD83C\uDDF8 España \u2022 \uD83C\uDFDF\uFE0F Santiago Bernabéu, Madrid" />
+
+            </LinearLayout>
 
         </LinearLayout>
+    </ScrollView>
 
-    </FrameLayout>
-</LinearLayout>
+    <!-- Loading View -->
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
+
+    <!-- Error Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#667085"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="@string/error_team_detail_failed"
+            tools:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_retry"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

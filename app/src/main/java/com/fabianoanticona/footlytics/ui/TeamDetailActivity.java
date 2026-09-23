@@ -3,7 +3,6 @@ package com.fabianoanticona.footlytics.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import com.fabianoanticona.footlytics.data.AppDatabase;
 import com.fabianoanticona.footlytics.data.FavoriteTeamDao;
 import com.fabianoanticona.footlytics.data.FavoriteTeamEntity;
 import com.fabianoanticona.footlytics.model.TeamDetail;
-import com.google.android.material.appbar.MaterialToolbar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,14 +27,12 @@ import retrofit2.Response;
 
 public class TeamDetailActivity extends AppCompatActivity {
 
-    private MaterialToolbar toolbar;
+    private ImageView ivBack;
+    private ImageView ivFavorite;
     private View layoutContent;
-    private ImageView ivDetailLogo;
-    private TextView tvDetailName;
-    private TextView tvDetailCountry;
-    private TextView tvDetailStadium;
-    private TextView tvDetailStadiumCity;
-    private ImageButton btnFavorite;
+    private ImageView ivTeamLogo;
+    private TextView tvTeamName;
+    private TextView tvTeamDetails;
     private ProgressBar pbLoading;
     private TextView tvMessage;
     private Button btnRetry;
@@ -63,30 +59,28 @@ public class TeamDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
+        ivBack = findViewById(R.id.ivBack);
+        ivFavorite = findViewById(R.id.ivFavorite);
         layoutContent = findViewById(R.id.layoutContent);
-        ivDetailLogo = findViewById(R.id.ivDetailLogo);
-        tvDetailName = findViewById(R.id.tvDetailName);
-        tvDetailCountry = findViewById(R.id.tvDetailCountry);
-        tvDetailStadium = findViewById(R.id.tvDetailStadium);
-        tvDetailStadiumCity = findViewById(R.id.tvDetailStadiumCity);
-        btnFavorite = findViewById(R.id.btnFavorite);
+        ivTeamLogo = findViewById(R.id.ivTeamLogo);
+        tvTeamName = findViewById(R.id.tvTeamName);
+        tvTeamDetails = findViewById(R.id.tvTeamDetails);
         pbLoading = findViewById(R.id.pbLoading);
         tvMessage = findViewById(R.id.tvMessage);
         btnRetry = findViewById(R.id.btnRetry);
     }
 
     private void setupListeners() {
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(v -> finish());
+        if (ivBack != null) {
+            ivBack.setOnClickListener(v -> finish());
+        }
+
+        if (ivFavorite != null) {
+            ivFavorite.setOnClickListener(v -> toggleFavorite());
         }
 
         if (btnRetry != null) {
             btnRetry.setOnClickListener(v -> loadTeamDetail(teamId));
-        }
-
-        if (btnFavorite != null) {
-            btnFavorite.setOnClickListener(v -> toggleFavorite());
         }
     }
 
@@ -103,8 +97,8 @@ public class TeamDetailActivity extends AppCompatActivity {
     }
 
     private void updateFavoriteButtonUI() {
-        if (btnFavorite != null) {
-            btnFavorite.setImageResource(isFavorite ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+        if (ivFavorite != null) {
+            ivFavorite.setImageResource(isFavorite ? R.drawable.ic_star_large : R.drawable.ic_star_outline);
         }
     }
 
@@ -176,47 +170,43 @@ public class TeamDetailActivity extends AppCompatActivity {
         if (btnRetry != null) btnRetry.setVisibility(View.GONE);
         if (layoutContent != null) layoutContent.setVisibility(View.VISIBLE);
 
-        if (tvDetailName != null) {
-            tvDetailName.setText(teamDetail.getName() != null ? teamDetail.getName() : "");
+        if (tvTeamName != null && teamDetail.getName() != null && !teamDetail.getName().trim().isEmpty()) {
+            tvTeamName.setText(teamDetail.getName());
         }
 
-        if (ivDetailLogo != null) {
-            if (teamDetail.getLogo() != null && !teamDetail.getLogo().trim().isEmpty()) {
-                Glide.with(this)
-                        .load(teamDetail.getLogo())
-                        .placeholder(R.drawable.ic_logo_footlytics)
-                        .error(R.drawable.ic_logo_footlytics)
-                        .into(ivDetailLogo);
-            } else {
-                ivDetailLogo.setImageResource(R.drawable.ic_logo_footlytics);
-            }
+        if (ivTeamLogo != null && teamDetail.getLogo() != null && !teamDetail.getLogo().trim().isEmpty()) {
+            Glide.with(this)
+                    .load(teamDetail.getLogo())
+                    .placeholder(R.drawable.ic_logo_footlytics)
+                    .error(R.drawable.ic_logo_footlytics)
+                    .into(ivTeamLogo);
         }
 
-        if (tvDetailCountry != null) {
+        if (tvTeamDetails != null) {
+            StringBuilder sb = new StringBuilder();
             if (teamDetail.getCountry() != null && !teamDetail.getCountry().trim().isEmpty()) {
-                tvDetailCountry.setText(teamDetail.getCountry());
-                tvDetailCountry.setVisibility(View.VISIBLE);
-            } else {
-                tvDetailCountry.setVisibility(View.GONE);
+                sb.append("🇪🇸 ").append(teamDetail.getCountry());
             }
-        }
 
-        if (tvDetailStadium != null) {
+            StringBuilder stadiumSb = new StringBuilder();
             if (teamDetail.getStadium() != null && !teamDetail.getStadium().trim().isEmpty()) {
-                tvDetailStadium.setText(teamDetail.getStadium());
-                tvDetailStadium.setVisibility(View.VISIBLE);
-            } else {
-                tvDetailStadium.setVisibility(View.GONE);
+                stadiumSb.append(teamDetail.getStadium());
             }
-        }
-
-        if (tvDetailStadiumCity != null) {
             if (teamDetail.getStadiumCity() != null && !teamDetail.getStadiumCity().trim().isEmpty()) {
-                tvDetailStadiumCity.setText(teamDetail.getStadiumCity());
-                tvDetailStadiumCity.setVisibility(View.VISIBLE);
-            } else {
-                tvDetailStadiumCity.setVisibility(View.GONE);
+                if (stadiumSb.length() > 0) {
+                    stadiumSb.append(", ");
+                }
+                stadiumSb.append(teamDetail.getStadiumCity());
             }
+
+            if (stadiumSb.length() > 0) {
+                if (sb.length() > 0) {
+                    sb.append(" • ");
+                }
+                sb.append("🏟️ ").append(stadiumSb);
+            }
+
+            tvTeamDetails.setText(sb.toString());
         }
     }
 

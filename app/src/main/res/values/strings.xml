@@ -62,4 +62,16 @@
     <!-- Accessibility -->
     <string name="content_desc_logo">Logo del equipo</string>
     <string name="content_desc_favorite">Marcar como favorito</string>
+    <string name="content_desc_back">Atrás</string>
+
+    <!-- Team Detail -->
+    <string name="detail_title">Detalle del Club</string>
+
+    <string name="tab_matches">Partidos</string>
+    <string name="tab_squad">Plantilla</string>
+    <string name="tab_stats">Estadísticas</string>
+    <string name="detail_recent_results">Últimos Resultados</string>
+    <string name="banner_tactics_title">Análisis Táctico Footlytics</string>
+    <string name="banner_tactics_desc">Generando mapa de calor posicional y predicción de transiciones para el próximo derbi...</string>
+    <string name="banner_live">LIVE</string>
 </resources>
