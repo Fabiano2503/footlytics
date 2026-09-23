@@ -14,20 +14,20 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("competitions")
-    Call<List<CompetitionItem>> obtenerCompeticiones();
+    Call<List<CompetitionItem>> getCompetitions();
 
     @GET("competitions/{id}/standings")
-    Call<List<StandingItem>> obtenerStandings(
+    Call<List<StandingItem>> getStandings(
             @Path("id") int competitionId
     );
 
     @GET("teams")
-    Call<List<TeamItem>> buscarEquipos(
+    Call<List<TeamItem>> searchTeams(
             @Query("search") String query
     );
 
     @GET("teams/{id}")
-    Call<TeamDetail> obtenerDetalleEquipo(
+    Call<TeamDetail> getTeamDetail(
             @Path("id") int teamId
     );
 }
