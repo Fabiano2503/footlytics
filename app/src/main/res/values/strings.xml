@@ -4,25 +4,49 @@
     <!-- Splash -->
     <string name="splash_subtitle">Explora competiciones y equipos</string>
 
-    <!-- Home & Search -->
+    <!-- Navigation -->
+    <string name="menu_explore">Explorar</string>
+    <string name="menu_favorites">Favoritos</string>
+    <string name="explore_mode">Modo Explorar</string>
+    <string name="favorites_mode">Modo Favoritos</string>
+
+    <!-- Search & Actions -->
     <string name="search_hint">Buscar equipo...</string>
+    <string name="btn_retry">Reintentar</string>
+    <string name="loading">Cargando...</string>
+
+    <!-- Standings Header -->
+    <string name="standings_pos">POS</string>
+    <string name="header_logo">LOGO</string>
+    <string name="standings_team">EQUIPO</string>
+    <string name="standings_played">PJ</string>
+    <string name="standings_points">PTS</string>
+
+    <!-- Messages & Errors -->
+    <string name="msg_added_favorite">Añadido a favoritos</string>
+    <string name="msg_removed_favorite">Eliminado de favoritos</string>
+    <string name="error_network">No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente.</string>
+    <string name="error_server">El servidor tuvo un problema. Intenta nuevamente.</string>
+    <string name="error_search_empty">No encontramos equipos para tu búsqueda.</string>
+    <string name="error_search_failed">No pudimos realizar la búsqueda.</string>
+    <string name="error_team_not_found">Equipo no encontrado.</string>
+    <string name="error_team_detail_failed">No pudimos cargar la información del equipo.</string>
+    <string name="empty_standings_message">No hay tabla de posiciones disponible para esta competición.</string>
 
     <!-- Empty States -->
     <string name="empty_favorites_title">Aún no tienes favoritos</string>
+    <string name="empty_favorites_subtitle">Guarda equipos desde su pantalla de detalle.</string>
+    <string name="btn_explore_teams">Explorar equipos</string>
     <string name="empty_favorites_desc">Busca equipos y guárdalos para verlos aquí.</string>
     <string name="action_explore_teams">Explorar equipos</string>
 
-    <!-- Navegación -->
-    <string name="menu_explore">Explorar</string>
-    <string name="menu_favorites">Favoritos</string>
-
-    <!-- Tools / Placeholders visuales -->
-    <string name="placeholder_team_name">Nombre Equipo</string>
+    <!-- Tools / Visual Placeholders -->
+    <string name="placeholder_team_name">Nombre del equipo</string>
     <string name="placeholder_country">País</string>
     <string name="placeholder_team">Equipo</string>
     <string name="placeholder_stadium">Estadio, Ciudad</string>
 
-    <!-- Accesibilidad -->
+    <!-- Accessibility -->
     <string name="content_desc_logo">Logo del equipo</string>
     <string name="content_desc_favorite">Marcar como favorito</string>
 </resources>
