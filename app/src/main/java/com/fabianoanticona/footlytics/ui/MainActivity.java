@@ -1,42 +1,73 @@
 package com.fabianoanticona.footlytics.ui;
 
 import android.os.Bundle;
-import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.fabianoanticona.footlytics.R;
-import com.fabianoanticona.footlytics.api.ApiService;
-import com.fabianoanticona.footlytics.api.RetrofitClient;
-import com.fabianoanticona.footlytics.model.CompetitionItem;
-
-import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ExploreFragment exploreFragment;
+    private FavoritesFragment favoritesFragment;
+    private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ApiService apiService = RetrofitClient.getApiService();
-        apiService.obtenerCompeticiones().enqueue(new Callback<List<CompetitionItem>>() {
-            @Override
-            public void onResponse(Call<List<CompetitionItem>> call, Response<List<CompetitionItem>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<CompetitionItem> lista = response.body();
-                    Log.d("API_TEST", "Competiciones recibidas: " + lista.size());
-                } else {
-                    Log.e("API_TEST", "HTTP: " + response.code());
-                }
-            }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
-            @Override
-            public void onFailure(Call<List<CompetitionItem>> call, Throwable t) {
-                Log.e("API_TEST", "Error de comunicación", t);
+        if (savedInstanceState == null) {
+            exploreFragment = ExploreFragment.newInstance();
+            favoritesFragment = FavoritesFragment.newInstance();
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, exploreFragment, "EXPLORE")
+                    .add(R.id.fragmentContainer, favoritesFragment, "FAVORITES")
+                    .hide(favoritesFragment)
+                    .commit();
+
+            activeFragment = exploreFragment;
+        } else {
+            exploreFragment = (ExploreFragment) getSupportFragmentManager().findFragmentByTag("EXPLORE");
+            favoritesFragment = (FavoritesFragment) getSupportFragmentManager().findFragmentByTag("FAVORITES");
+
+            if (favoritesFragment != null && favoritesFragment.isVisible()) {
+                activeFragment = favoritesFragment;
+            } else {
+                activeFragment = exploreFragment;
             }
+        }
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_explore) {
+                if (exploreFragment != null && activeFragment != exploreFragment) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .hide(activeFragment)
+                            .show(exploreFragment)
+                            .commit();
+                    activeFragment = exploreFragment;
+                }
+                return true;
+            } else if (itemId == R.id.nav_favorites) {
+                if (favoritesFragment != null && activeFragment != favoritesFragment) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .hide(activeFragment)
+                            .show(favoritesFragment)
+                            .commit();
+                    activeFragment = favoritesFragment;
+                }
+                return true;
+            }
+            return false;
         });
     }
 }
