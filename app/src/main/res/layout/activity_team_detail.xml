@@ -51,7 +51,7 @@
                     android:layout_marginTop="@dimen/spacing_16"
                     android:contentDescription="@string/content_desc_logo"
                     android:scaleType="fitCenter"
-                    tools:src="@drawable/ic_logo_placeholder" />
+                    tools:src="@drawable/ic_logo_footlytics" />
 
                 <!-- Team Name -->
                 <TextView

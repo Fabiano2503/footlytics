@@ -40,7 +40,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     @NonNull
     @Override
     public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_result, parent, false);
         return new TeamViewHolder(view);
     }
 
@@ -65,7 +65,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
             super(itemView);
             ivTeamLogo = itemView.findViewById(R.id.ivTeamLogo);
             tvTeamName = itemView.findViewById(R.id.tvTeamName);
-            tvTeamCountry = itemView.findViewById(R.id.tvTeamCountry);
+            tvTeamCountry = itemView.findViewById(R.id.tvCountry);
         }
 
         public void bind(TeamItem team, OnTeamClickListener listener) {
@@ -77,11 +77,11 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
             if (team.getLogo() != null && !team.getLogo().trim().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(team.getLogo())
-                        .placeholder(R.drawable.ic_logo_placeholder)
-                        .error(R.drawable.ic_logo_placeholder)
+                        .placeholder(R.drawable.ic_logo_footlytics)
+                        .error(R.drawable.ic_logo_footlytics)
                         .into(ivTeamLogo);
             } else {
-                ivTeamLogo.setImageResource(R.drawable.ic_logo_placeholder);
+                ivTeamLogo.setImageResource(R.drawable.ic_logo_footlytics);
             }
 
             itemView.setOnClickListener(v -> {

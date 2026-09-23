@@ -1,5 +1,6 @@
 package com.fabianoanticona.footlytics.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,13 +8,14 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,10 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fabianoanticona.footlytics.R;
 import com.fabianoanticona.footlytics.api.ApiService;
 import com.fabianoanticona.footlytics.api.RetrofitClient;
+import com.fabianoanticona.footlytics.data.DataCache;
 import com.fabianoanticona.footlytics.model.CompetitionItem;
 import com.fabianoanticona.footlytics.model.StandingItem;
 import com.fabianoanticona.footlytics.model.TeamItem;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +39,14 @@ import retrofit2.Response;
 
 public class ExploreFragment extends Fragment {
 
-    private View cardSelector;
+    private TextView tvAppTitle;
+    private ImageView ivSearchIcon;
+    private View layoutSearch;
+    private EditText etSearch;
+    private RecyclerView rvCompetitions;
     private View layoutTableHeader;
-    private Spinner spinnerCompetitions;
     private RecyclerView rvStandings;
     private RecyclerView rvSearchResults;
-    private TextInputEditText etSearch;
     private ProgressBar pbLoading;
     private TextView tvMessage;
     private Button btnRetry;
@@ -53,7 +57,6 @@ public class ExploreFragment extends Fragment {
 
     private final List<CompetitionItem> competitions = new ArrayList<>();
     private int selectedCompetitionId = -1;
-    private boolean isInitialSelection = true;
 
     private boolean isSearchMode = false;
     private String currentSearchQuery = "";
@@ -81,6 +84,7 @@ public class ExploreFragment extends Fragment {
         initViews(view);
         setupRecyclerView();
         setupListeners();
+        setupBackNavigation();
 
         if (!isInitialized) {
             isInitialized = true;
@@ -89,18 +93,33 @@ public class ExploreFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        cardSelector = view.findViewById(R.id.cardSelector);
+        tvAppTitle = view.findViewById(R.id.tvAppTitle);
+        ivSearchIcon = view.findViewById(R.id.ivSearchIcon);
+        layoutSearch = view.findViewById(R.id.layoutSearch);
+        etSearch = view.findViewById(R.id.etSearch);
+        rvCompetitions = view.findViewById(R.id.rvCompetitions);
         layoutTableHeader = view.findViewById(R.id.layoutTableHeader);
-        spinnerCompetitions = view.findViewById(R.id.spinnerCompetitions);
         rvStandings = view.findViewById(R.id.rvStandings);
         rvSearchResults = view.findViewById(R.id.rvSearchResults);
-        etSearch = view.findViewById(R.id.etSearch);
         pbLoading = view.findViewById(R.id.pbLoading);
         tvMessage = view.findViewById(R.id.tvMessage);
         btnRetry = view.findViewById(R.id.btnRetry);
     }
 
     private void setupRecyclerView() {
+        competitionAdapter = new CompetitionAdapter((competition, position) -> {
+            if (competition != null && competition.getId() != selectedCompetitionId) {
+                selectedCompetitionId = competition.getId();
+                competitionAdapter.setSelectedPosition(position);
+                if (isSearchMode) {
+                    showExploreState();
+                }
+                fetchStandings(selectedCompetitionId);
+            }
+        });
+        rvCompetitions.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvCompetitions.setAdapter(competitionAdapter);
+
         standingAdapter = new StandingAdapter(teamId -> {
             if (getContext() != null) {
                 Intent intent = new Intent(requireContext(), TeamDetailActivity.class);
@@ -123,71 +142,125 @@ public class ExploreFragment extends Fragment {
     }
 
     private void setupListeners() {
-        btnRetry.setOnClickListener(v -> {
-            if (isSearchMode) {
-                if (!currentSearchQuery.isEmpty()) {
-                    performSearch(currentSearchQuery);
-                }
-            } else if (competitions.isEmpty()) {
-                loadCompetitions();
-            } else if (selectedCompetitionId != -1) {
-                fetchStandings(selectedCompetitionId);
-            } else {
-                loadCompetitions();
-            }
-        });
+        if (ivSearchIcon != null) {
+            ivSearchIcon.setOnClickListener(v -> showSearchState());
+        }
 
-        spinnerCompetitions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= 0 && position < competitions.size()) {
-                    CompetitionItem selectedItem = competitions.get(position);
-                    int newCompetitionId = selectedItem.getId();
-
-                    if (isInitialSelection) {
-                        isInitialSelection = false;
-                        return;
+        if (btnRetry != null) {
+            btnRetry.setOnClickListener(v -> {
+                if (isSearchMode) {
+                    if (!currentSearchQuery.isEmpty()) {
+                        performSearch(currentSearchQuery);
                     }
-
-                    if (newCompetitionId != selectedCompetitionId) {
-                        selectedCompetitionId = newCompetitionId;
-                        fetchStandings(selectedCompetitionId);
-                    }
+                } else if (competitions.isEmpty()) {
+                    loadCompetitions();
+                } else if (selectedCompetitionId != -1) {
+                    fetchStandings(selectedCompetitionId);
+                } else {
+                    loadCompetitions();
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
+            });
+        }
 
         if (etSearch != null) {
-            etSearch.setOnEditorActionListener((v, actionId, event) -> {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String query = etSearch.getText() != null ? etSearch.getText().toString().trim() : "";
-                    if (!query.isEmpty()) {
-                        performSearch(query);
-                    }
-                    return true;
-                }
-                return false;
-            });
-
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String query = s.toString().trim();
+                    if (query.isEmpty()) {
+                        if (teamAdapter != null) {
+                            teamAdapter.updateTeams(new ArrayList<>());
+                        }
+                    } else if (query.length() >= 2) {
+                        performSearch(query);
+                    } else {
+                        if (teamAdapter != null) {
+                            teamAdapter.updateTeams(new ArrayList<>());
+                        }
+                    }
+                }
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s.toString().trim().isEmpty() && isSearchMode) {
-                        switchToExploreMode();
-                    }
                 }
             });
+        }
+    }
+
+    private void setupBackNavigation() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (layoutSearch != null && layoutSearch.getVisibility() == View.VISIBLE) {
+                    showExploreState(); // Exit search mode
+                } else {
+                    this.setEnabled(false); // Let the system handle the normal back press
+                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    }
+
+    private void showExploreState() {
+        isSearchMode = false;
+        currentSearchQuery = "";
+
+        if (tvAppTitle != null) tvAppTitle.setVisibility(View.VISIBLE);
+        if (ivSearchIcon != null) ivSearchIcon.setVisibility(View.VISIBLE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.VISIBLE);
+        if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.VISIBLE);
+        if (rvStandings != null) rvStandings.setVisibility(View.VISIBLE);
+
+        if (layoutSearch != null) layoutSearch.setVisibility(View.GONE);
+        if (rvSearchResults != null) rvSearchResults.setVisibility(View.GONE);
+
+        hideKeyboard();
+
+        if (etSearch != null) {
+            etSearch.setText("");
+        }
+    }
+
+    private void showSearchState() {
+        isSearchMode = true;
+
+        if (tvAppTitle != null) tvAppTitle.setVisibility(View.GONE);
+        if (ivSearchIcon != null) ivSearchIcon.setVisibility(View.GONE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.GONE);
+        if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
+        if (rvStandings != null) rvStandings.setVisibility(View.GONE);
+
+        if (layoutSearch != null) layoutSearch.setVisibility(View.VISIBLE);
+        if (rvSearchResults != null) rvSearchResults.setVisibility(View.VISIBLE);
+
+        if (teamAdapter != null) {
+            teamAdapter.updateTeams(new ArrayList<>());
+        }
+
+        if (etSearch != null) {
+            etSearch.requestFocus();
+            etSearch.post(() -> showKeyboard(etSearch));
+        }
+    }
+
+    private void showKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = requireActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
     }
 
@@ -225,33 +298,8 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    private void switchToExploreMode() {
-        isSearchMode = false;
-        currentSearchQuery = "";
-
-        if (rvSearchResults != null) rvSearchResults.setVisibility(View.GONE);
-        if (cardSelector != null) cardSelector.setVisibility(View.VISIBLE);
-
-        if (standingAdapter != null && standingAdapter.getItemCount() > 0) {
-            if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.VISIBLE);
-            if (rvStandings != null) rvStandings.setVisibility(View.VISIBLE);
-            if (pbLoading != null) pbLoading.setVisibility(View.GONE);
-            if (tvMessage != null) tvMessage.setVisibility(View.GONE);
-            if (btnRetry != null) btnRetry.setVisibility(View.GONE);
-        } else {
-            if (pbLoading != null && pbLoading.getVisibility() == View.VISIBLE) {
-                showLoading();
-            } else if (tvMessage != null && tvMessage.getVisibility() == View.VISIBLE) {
-                if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
-                if (rvStandings != null) rvStandings.setVisibility(View.GONE);
-            } else {
-                showSuccess();
-            }
-        }
-    }
-
     private void showSearchLoading() {
-        if (cardSelector != null) cardSelector.setVisibility(View.GONE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.GONE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
         if (rvSearchResults != null) rvSearchResults.setVisibility(View.GONE);
@@ -262,7 +310,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void showSearchSuccess() {
-        if (cardSelector != null) cardSelector.setVisibility(View.GONE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.GONE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
 
@@ -273,7 +321,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void showSearchEmpty(String message) {
-        if (cardSelector != null) cardSelector.setVisibility(View.GONE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.GONE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
         if (rvSearchResults != null) rvSearchResults.setVisibility(View.GONE);
@@ -287,7 +335,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void showSearchError(String message) {
-        if (cardSelector != null) cardSelector.setVisibility(View.GONE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.GONE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
         if (rvSearchResults != null) rvSearchResults.setVisibility(View.GONE);
@@ -301,6 +349,27 @@ public class ExploreFragment extends Fragment {
     }
 
     private void loadCompetitions() {
+        List<CompetitionItem> cachedCompetitions = DataCache.getInstance().getCompetitions();
+        if (cachedCompetitions != null && !cachedCompetitions.isEmpty()) {
+            competitions.clear();
+            competitions.addAll(cachedCompetitions);
+            DataCache.getInstance().clear();
+
+            competitionAdapter.setCompetitions(competitions);
+
+            int targetIndex = findCompetitionIndexByName("LaLiga");
+            if (targetIndex != -1) {
+                selectedCompetitionId = competitions.get(targetIndex).getId();
+                competitionAdapter.setSelectedPosition(targetIndex);
+            } else {
+                selectedCompetitionId = competitions.get(0).getId();
+                competitionAdapter.setSelectedPosition(0);
+            }
+
+            fetchStandings(selectedCompetitionId);
+            return;
+        }
+
         showLoading();
 
         ApiService apiService = RetrofitClient.getApiService();
@@ -314,18 +383,15 @@ public class ExploreFragment extends Fragment {
                     competitions.clear();
                     competitions.addAll(response.body());
 
-                    competitionAdapter = new CompetitionAdapter(requireContext(), competitions);
-                    spinnerCompetitions.setAdapter(competitionAdapter);
+                    competitionAdapter.setCompetitions(competitions);
 
                     int targetIndex = findCompetitionIndexByName("LaLiga");
                     if (targetIndex != -1) {
                         selectedCompetitionId = competitions.get(targetIndex).getId();
-                        isInitialSelection = true;
-                        spinnerCompetitions.setSelection(targetIndex);
+                        competitionAdapter.setSelectedPosition(targetIndex);
                     } else {
                         selectedCompetitionId = competitions.get(0).getId();
-                        isInitialSelection = true;
-                        spinnerCompetitions.setSelection(0);
+                        competitionAdapter.setSelectedPosition(0);
                     }
 
                     fetchStandings(selectedCompetitionId);
@@ -387,7 +453,7 @@ public class ExploreFragment extends Fragment {
     // State machine methods
     public void showLoading() {
         if (isSearchMode) return;
-        if (cardSelector != null) cardSelector.setVisibility(View.VISIBLE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.VISIBLE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (pbLoading != null) pbLoading.setVisibility(View.VISIBLE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
@@ -398,7 +464,7 @@ public class ExploreFragment extends Fragment {
 
     public void showSuccess() {
         if (isSearchMode) return;
-        if (cardSelector != null) cardSelector.setVisibility(View.VISIBLE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.VISIBLE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.VISIBLE);
         if (pbLoading != null) pbLoading.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.VISIBLE);
@@ -409,7 +475,7 @@ public class ExploreFragment extends Fragment {
 
     public void showError(String message) {
         if (isSearchMode) return;
-        if (cardSelector != null) cardSelector.setVisibility(View.VISIBLE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.VISIBLE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (pbLoading != null) pbLoading.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);
@@ -423,7 +489,7 @@ public class ExploreFragment extends Fragment {
 
     public void showEmpty(String message) {
         if (isSearchMode) return;
-        if (cardSelector != null) cardSelector.setVisibility(View.VISIBLE);
+        if (rvCompetitions != null) rvCompetitions.setVisibility(View.VISIBLE);
         if (layoutTableHeader != null) layoutTableHeader.setVisibility(View.GONE);
         if (pbLoading != null) pbLoading.setVisibility(View.GONE);
         if (rvStandings != null) rvStandings.setVisibility(View.GONE);

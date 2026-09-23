@@ -77,11 +77,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             if (favorite.getLogo() != null && !favorite.getLogo().trim().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(favorite.getLogo())
-                        .placeholder(R.drawable.ic_logo_placeholder)
-                        .error(R.drawable.ic_logo_placeholder)
+                        .placeholder(R.drawable.ic_logo_footlytics)
+                        .error(R.drawable.ic_logo_footlytics)
                         .into(ivTeamLogo);
             } else {
-                ivTeamLogo.setImageResource(R.drawable.ic_logo_placeholder);
+                ivTeamLogo.setImageResource(R.drawable.ic_logo_footlytics);
             }
 
             itemView.setOnClickListener(v -> {

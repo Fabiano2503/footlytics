@@ -184,11 +184,11 @@ public class TeamDetailActivity extends AppCompatActivity {
             if (teamDetail.getLogo() != null && !teamDetail.getLogo().trim().isEmpty()) {
                 Glide.with(this)
                         .load(teamDetail.getLogo())
-                        .placeholder(R.drawable.ic_logo_placeholder)
-                        .error(R.drawable.ic_logo_placeholder)
+                        .placeholder(R.drawable.ic_logo_footlytics)
+                        .error(R.drawable.ic_logo_footlytics)
                         .into(ivDetailLogo);
             } else {
-                ivDetailLogo.setImageResource(R.drawable.ic_logo_placeholder);
+                ivDetailLogo.setImageResource(R.drawable.ic_logo_footlytics);
             }
         }
 

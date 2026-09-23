@@ -1,57 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="#F6F7F9">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFavorites"
+    <!-- Header Area (Top) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutTopHeader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/spacing_8"
-        tools:listitem="@layout/item_team" />
-
-    <LinearLayout
-        android:id="@+id/layoutEmptyFavorites"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAppLogo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_logo_footlytics" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivAppLogo"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvAppTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="#157347"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAppSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorites_subtitle"
+                android:textColor="#667085"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Empty State Container -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_24"
-        android:visibility="gone">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutTopHeader">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/bg_circle_empty"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_star_large" />
 
         <TextView
-            android:id="@+id/tvEmptyFavoritesTitle"
+            android:id="@+id/tvEmptyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/empty_favorites_title"
-            android:textColor="@color/text_primary"
-            android:textSize="@dimen/text_20"
+            android:layout_marginTop="24dp"
+            android:text="@string/favorites_empty_title"
+            android:textColor="#17202A"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvEmptyFavoritesSubtitle"
+            android:id="@+id/tvEmptySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:gravity="center"
-            android:text="@string/empty_favorites_subtitle"
-            android:textColor="@color/text_secondary"
-            android:textSize="@dimen/text_14" />
+            android:layout_marginTop="8dp"
+            android:text="@string/favorites_empty_subtitle"
+            android:textColor="#667085"
+            android:textSize="14sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExploreTeams"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/favorites_empty_button"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#157347"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvEmptyHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:text="@string/btn_explore_teams"
-            app:cornerRadius="@dimen/radius_12" />
-
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_info_pill"
+            android:drawablePadding="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:text="@string/favorites_empty_hint"
+            android:textColor="#17202A"
+            android:textSize="12sp"
+            app:drawableStartCompat="@drawable/ic_lightbulb" />
     </LinearLayout>
 
-</FrameLayout>
+    <!-- Data State - Saved Favorites -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutTopHeader"
+        tools:listitem="@layout/item_search_result" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

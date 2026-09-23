@@ -69,7 +69,7 @@ public class FavoritesFragment extends Fragment {
 
     private void initViews(View view) {
         rvFavorites = view.findViewById(R.id.rvFavorites);
-        layoutEmptyFavorites = view.findViewById(R.id.layoutEmptyFavorites);
+        layoutEmptyFavorites = view.findViewById(R.id.layoutEmptyState);
         btnExploreTeams = view.findViewById(R.id.btnExploreTeams);
     }
 

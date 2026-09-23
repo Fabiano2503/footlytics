@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FutbolExplorer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#157347</item>
+        <item name="colorSecondaryContainer">#D1E7DD</item>
+        <item name="colorOnSecondaryContainer">#157347</item>
     </style>
 
     <style name="Theme.FutbolExplorer" parent="Base.Theme.FutbolExplorer" />

@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Footlytics</string>
+    <string name="explore_title">Footlytics</string>
+    <string name="explore_subtitle">Explorar</string>
 
     <!-- Splash -->
-    <string name="splash_subtitle">Explora competiciones y equipos</string>
+    <string name="splash_subtitle">Estadísticas &amp; Análisis de Fútbol</string>
+    <string name="splash_description">Clasificación en tiempo real, búsqueda de equipos y gestión de favoritos.</string>
 
     <!-- Navigation -->
     <string name="menu_explore">Explorar</string>
@@ -16,6 +19,11 @@
     <string name="loading">Cargando...</string>
 
     <!-- Standings Header -->
+    <string name="table_header_pos">POS</string>
+    <string name="table_header_esc">ESC</string>
+    <string name="table_header_team">EQUIPO</string>
+    <string name="table_header_played">PJ</string>
+    <string name="table_header_points">PTS</string>
     <string name="standings_pos">POS</string>
     <string name="header_logo">LOGO</string>
     <string name="standings_team">EQUIPO</string>
@@ -34,6 +42,11 @@
     <string name="empty_standings_message">No hay tabla de posiciones disponible para esta competición.</string>
 
     <!-- Empty States -->
+    <string name="favorites_subtitle">Favoritos</string>
+    <string name="favorites_empty_title">Aún no tienes favoritos</string>
+    <string name="favorites_empty_subtitle">Guarda equipos desde su pantalla de detalle.</string>
+    <string name="favorites_empty_button">Explorar equipos</string>
+    <string name="favorites_empty_hint">Toca la estrella \u2605 en la ficha de un club</string>
     <string name="empty_favorites_title">Aún no tienes favoritos</string>
     <string name="empty_favorites_subtitle">Guarda equipos desde su pantalla de detalle.</string>
     <string name="btn_explore_teams">Explorar equipos</string>

@@ -67,8 +67,8 @@ public class StandingAdapter extends RecyclerView.Adapter<StandingAdapter.Standi
         public StandingViewHolder(@NonNull View itemView) {
             super(itemView);
             tvPosition = itemView.findViewById(R.id.tvPosition);
-            ivLogo = itemView.findViewById(R.id.ivStandingLogo);
-            tvTeam = itemView.findViewById(R.id.tvStandingTeam);
+            ivLogo = itemView.findViewById(R.id.ivTeamLogo);
+            tvTeam = itemView.findViewById(R.id.tvTeamName);
             tvPlayed = itemView.findViewById(R.id.tvPlayed);
             tvPoints = itemView.findViewById(R.id.tvPoints);
         }
@@ -87,11 +87,11 @@ public class StandingAdapter extends RecyclerView.Adapter<StandingAdapter.Standi
                 if (team.getLogo() != null && !team.getLogo().trim().isEmpty()) {
                     Glide.with(itemView.getContext())
                             .load(team.getLogo())
-                            .placeholder(R.drawable.ic_logo_placeholder)
-                            .error(R.drawable.ic_logo_placeholder)
+                            .placeholder(R.drawable.ic_logo_footlytics)
+                            .error(R.drawable.ic_logo_footlytics)
                             .into(ivLogo);
                 } else {
-                    ivLogo.setImageResource(R.drawable.ic_logo_placeholder);
+                    ivLogo.setImageResource(R.drawable.ic_logo_footlytics);
                 }
 
                 itemView.setOnClickListener(v -> {
@@ -101,7 +101,7 @@ public class StandingAdapter extends RecyclerView.Adapter<StandingAdapter.Standi
                 });
             } else {
                 tvTeam.setText("");
-                ivLogo.setImageResource(R.drawable.ic_logo_placeholder);
+                ivLogo.setImageResource(R.drawable.ic_logo_footlytics);
                 itemView.setOnClickListener(null);
             }
         }
