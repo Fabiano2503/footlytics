@@ -1,71 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/spacing_24">
+    android:orientation="vertical">
 
-    <!-- Botón de regreso -->
-    <ImageView
-        android:id="@+id/ivBack"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/spacing_8"
-        android:src="@android:drawable/ic_menu_revert" />
+        android:theme="@style/ThemeOverlay.Material3.ActionBar">
 
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/ivDetailLogo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:background="@color/border"
-        android:contentDescription="@string/content_desc_logo" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/surface"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:title="" />
 
-    <!-- Nombre del equipo -->
-    <TextView
-        android:id="@+id/tvDetailName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_28"
-        android:textStyle="bold"
-        tools:text="@string/placeholder_team_name" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- País -->
-    <TextView
-        android:id="@+id/tvDetailCountry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:textColor="@color/text_secondary"
-        android:textSize="@dimen/text_16"
-        tools:text="@string/placeholder_country" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!-- Estadio y Ciudad -->
-    <TextView
-        android:id="@+id/tvDetailStadium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_24"
-        android:textColor="@color/text_primary"
-        android:textSize="@dimen/text_16"
-        tools:text="@string/placeholder_stadium" />
+        <!-- Main Content -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/layoutContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-    <!-- Favorito -->
-    <ImageButton
-        android:id="@+id/btnFavorite"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="@dimen/spacing_32"
-        android:backgroundTint="@color/primary"
-        android:contentDescription="@string/content_desc_favorite"
-        android:src="@android:drawable/btn_star" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_24">
+
+                <!-- Team Logo -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivDetailLogo"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="@dimen/spacing_16"
+                    android:contentDescription="@string/content_desc_logo"
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/ic_logo_placeholder" />
+
+                <!-- Team Name -->
+                <TextView
+                    android:id="@+id/tvDetailName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_16"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    tools:text="@string/placeholder_team_name" />
+
+                <!-- Country -->
+                <TextView
+                    android:id="@+id/tvDetailCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_8"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="@color/text_secondary"
+                    tools:text="@string/placeholder_country" />
+
+                <!-- Stadium Name -->
+                <TextView
+                    android:id="@+id/tvDetailStadium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_24"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textColor="@color/text_primary"
+                    tools:text="@string/placeholder_stadium" />
+
+                <!-- Stadium City -->
+                <TextView
+                    android:id="@+id/tvDetailStadiumCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="@color/text_secondary"
+                    tools:text="Madrid" />
+
+                <!-- Favorite Button -->
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="@dimen/spacing_32"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/content_desc_favorite"
+                    android:src="@android:drawable/btn_star_big_off" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Loading View -->
+        <ProgressBar
+            android:id="@+id/pbLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+        <!-- Error Layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_24">
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="@color/text_secondary"
+                android:visibility="gone"
+                tools:text="@string/error_team_detail_failed"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:text="@string/btn_retry"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 </LinearLayout>
